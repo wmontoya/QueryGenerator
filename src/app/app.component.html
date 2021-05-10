@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generador de Querys</title>
+</head>
+
+<body>
+  <div class="row">
+    <div class="col-md-10 ms-auto me-auto mt-3">
+      <div class="card">
+        <div class="card-header section-header">
+          Generador de código SQL
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-12">
+              Los campos con <strong>*</strong> son requeridos
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-md-2">
+              <strong>Sentencia:</strong>
+            </div>
+            <div class="col-md-2">
+              <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button"
+                  data-bs-toggle="dropdown">{{sentencia}}</button>
+                <ul class="dropdown-menu">
+                  <li *ngFor="let sen of sentencias;let i = index" (click)="this.secciones = i+1 ">
+                    <a class="dropdown-item">
+                      {{sen}}
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="secciones == 1">
+            <form [formGroup]="selectForm" (ngSubmit)="onSubmit()">
+
+              <div class="row mt-3" *ngFor="let sel of selects; let i = index">
+
+                <div class="row mt-3">
+                  <div class="col-md-2 col-sm-4">
+                    <h5>Columnas: {{i+1}}*</h5>
+                  </div>
+                  <div class="col-md-3 col-sm-8">
+                    <input type="text" formControlName="Columnas{{i}}" placeholder="Ejemplo: Columna1,Columna2,..."
+                      class="form-control" (change)="onChange(i)" (click)="onClick(i)">
+                  </div>
+                  <div class="col-md-1 col-sm-12">
+                    <h5>From</h5>
+                  </div>
+                  <div class="col-md-2 col-sm-4">
+                    <h5>Tabla: {{i+1}}*</h5>
+                  </div>
+                  <div class="col-md-2 col-sm-8">
+                    <input type="text" formControlName="Tabla{{i}}" placeholder="Ejemplo: miTabla" class="form-control"
+                      (change)="onChange(i)" (click)="onClick(i)">
+                  </div>
+                  <div class="col-md-2 col-sm-12">
+                    <div class="row">
+                      <div class="col-md-6 col-sm-12">
+                        <button type="button" class="btn btn-success" [disabled]="selectForm.invalid"
+                          (click)="addElementSelect()">Agregar</button>
+                      </div>
+                      <div class="col-md-6 col-sm-12" *ngIf="i>0">
+                        <button type="button" class="btn btn-danger" (click)="deleteElementSelect(i)">Eliminar</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+              <div class="row mt-5">
+                <div class="col-ms-12 text-center">
+                  <button type="submit" [disabled]="selectForm.invalid" class="btn btn-primary">Generar Código</button>
+                </div>
+              </div>
+
+            </form>
+          </div>
+          <div *ngIf="secciones == 2">
+            <form [formGroup]="insertForm" (ngSubmit)="onSubmit()">
+
+              <div class="row mt-3">
+                <div class="col-md-2 col-sm-12">
+                  <h5>INTO Tabla*</h5>
+                </div>
+                <div class="col-md-3 col-sm-12">
+                  <input type="text" formControlName="Tabla" placeholder="Ejemplo: miTabla" class="form-control"
+                    >
+                </div>
+                <div class="col-md-3 col-sm-12">
+                  <h5>Nombre Columnas</h5>
+                </div>
+                
+                <div class="col-md-3 col-sm-12">
+                  <input type="text" formControlName="Columnas" placeholder="Ejemplo: Columna1,Columna2,..."
+                    class="form-control">
+                </div>
+              </div>
+              <div class="row mt-5">
+                <div class="col-ms-12 text-center">
+                  <button type="submit" [disabled]="insertForm.invalid" class="btn btn-primary">Generar Código</button>
+                </div>
+              </div>
+
+            </form>
+          </div>
+          <div *ngIf="secciones == 3">
+            <form [formGroup]="updateForm" (ngSubmit)="onSubmit()">
+
+              <div class="row mt-3">
+                <div class="col-md-2 col-sm-12">
+                  <h5>Tabla*</h5>
+                </div>
+                <div class="col-md-3 col-sm-12">
+                  <input type="text" formControlName="Tabla" placeholder="Ejemplo: miTabla" class="form-control"
+                    >
+                </div>
+                <div class="col-md-3 col-sm-12">
+                  <h5>Nombre Columnas</h5>
+                </div>
+                
+                <div class="col-md-3 col-sm-12">
+                  <input type="text" formControlName="Columnas" placeholder="Ejemplo: Columna1,Columna2,..."
+                    class="form-control">
+                </div>
+              </div>
+              <div class="row mt-5">
+                <div class="col-ms-12 text-center">
+                  <button type="submit" [disabled]="updateForm.invalid" class="btn btn-primary">Generar Código</button>
+                </div>
+              </div>
+
+            </form>
+          </div>
+          <div *ngIf="secciones == 4">
+            <form [formGroup]="deleteForm" (ngSubmit)="onSubmit()">
+
+              <div class="row mt-3">
+                <div class="col-md-2 col-sm-12">
+                  <h5>FROM Tabla*</h5>
+                </div>
+                <div class="col-md-3 col-sm-12">
+                  <input type="text" formControlName="Tabla" placeholder="Ejemplo: miTabla" class="form-control"
+                    >
+                </div>
+                <div class="col-md-3 col-sm-12">
+                  <h5>WHERE*</h5>
+                </div>
+                
+                <div class="col-md-3 col-sm-12">
+                  <input type="text" formControlName="Columnas" placeholder="Ejemplo: Columna1,Columna2,..."
+                    class="form-control">
+                </div>
+              </div>
+              <div class="row mt-5">
+                <div class="col-ms-12 text-center">
+                  <button type="submit" [disabled]="deleteForm.invalid" class="btn btn-primary">Generar Código</button>
+                </div>
+              </div>
+
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-10 ms-auto me-auto mt-3">
+      <div class="card">
+        <div class="card-header section-header">
+          Código SQL Generado
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <textarea class="form-control" rows="6">{{resultado}}</textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>
+
+
+
+<!-- <div class="row mt-3"  *ngFor="let select of selects; let i = index">
+  <div class="col-md-2">
+    <h5>Columnas {{select.indice}}: *</h5>
+  </div>
+  <div class="col-md-3">
+    <input type="text" [(ngModel)]="select.Columnas" placeholder="Ejemplo: Columna1,Columna2,...">
+  </div>
+  <div class="col-md-1">
+    <h5>From</h5>
+  </div>
+  <div class="col-md-2">
+    <h5>Tabla {{select.indice}}: *</h5>
+  </div>
+  <div class="col-md-3">
+    <input type="text" [(ngModel)]="select.Tabla" placeholder="Ejemplo: miTabla">
+  </div>
+  <div class="col-md-1">
+    <button type="button" class="btn btn-success" (click)="addElementSelect()">Success</button>
+  </div>
+</div> -->
