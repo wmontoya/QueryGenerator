@@ -1,5 +1,4 @@
-import { Component, Renderer2, ViewChild, ElementRef, OnInit } from '@angular/core';
-import { SelectInterface } from "../app/interfaces/select.interface";
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
@@ -19,6 +18,7 @@ export class AppComponent implements OnInit {
   public deleteForm: FormGroup;
   public updateForm: FormGroup;
   public selctIndice = 0;
+  public isWhere = false;
 
   public resultado="";
 
@@ -29,7 +29,8 @@ export class AppComponent implements OnInit {
 
     this.selectForm = new FormGroup({
       ["Columnas" + this.selctIndice]: new FormControl("", [Validators.required]),
-      ["Tabla" + this.selctIndice]: new FormControl("", [Validators.required])
+      ["Tabla" + this.selctIndice]: new FormControl("", [Validators.required]),
+      "Where": new FormControl("", [])
     });
     this.selects.push(this.selectForm);
 
@@ -54,7 +55,8 @@ export class AppComponent implements OnInit {
     this.selctIndice++;
     this.selectForm = new FormGroup({
       ["Columnas" + this.selctIndice]: new FormControl("", [Validators.required]),
-      ["Tabla" + this.selctIndice]: new FormControl("", [Validators.required])
+      ["Tabla" + this.selctIndice]: new FormControl("", [Validators.required]),
+      "Where": new FormControl("", [])
     });
     this.selects.push(this.selectForm);
   }
@@ -71,7 +73,8 @@ export class AppComponent implements OnInit {
       if(this.selects[index].value["Columnas" + index] !="" || this.selects[index].value["Tabla" + index] !=""){
         this.selectForm = this.formBuilder.group({
           ["Columnas" + index]: new FormControl(this.selects[index].value["Columnas" + index], [Validators.required]),
-          ["Tabla" + index]: new FormControl(this.selects[index].value["Tabla" + index], [Validators.required])
+          ["Tabla" + index]: new FormControl(this.selects[index].value["Tabla" + index], [Validators.required]),
+          "Where": new FormControl("", [])
         });
         this.selects[index] = this.selectForm;
       }
@@ -83,7 +86,8 @@ export class AppComponent implements OnInit {
     if(this.selects[index].value["Columnas" + index] !="" || this.selects[index].value["Tabla" + index] !="")
       this.selectForm = this.formBuilder.group({
         ["Columnas" + index]: new FormControl(this.selects[index].value["Columnas" + index], [Validators.required]),
-        ["Tabla" + index]: new FormControl(this.selects[index].value["Tabla" + index], [Validators.required])
+        ["Tabla" + index]: new FormControl(this.selects[index].value["Tabla" + index], [Validators.required]),
+        "Where": new FormControl("", [])
       });
 
     this.selects[index] = this.selectForm;
@@ -92,7 +96,8 @@ export class AppComponent implements OnInit {
 
   onSubmit() {  
     if(this.secciones == 1){
-
+      console.log(this.selects);
+      
       this.resultado = "Select "
       this.selects.forEach((select,index)=>{
 
@@ -110,26 +115,31 @@ export class AppComponent implements OnInit {
       this.resultado= this.resultado + 'From ';
       this.selects.forEach((select,index)=>{
         if(this.selects.length == 1){
-          this.resultado= this.resultado + select.value['Tabla'+index]+';';
+          this.resultado= this.resultado + select.value['Tabla'+index];
         }
         if(this.selects.length >= 1 && index < this.selects.length-1){
           this.resultado= this.resultado + select.value['Tabla'+index]+',';
         }
         if(this.selects.length > 1 && index == this.selects.length-1){
-          this.resultado= this.resultado + select.value['Tabla'+index]+';';
+          this.resultado= this.resultado + select.value['Tabla'+index];
         }
       });
+      if(this.isWhere){
+        this.resultado =  this.resultado + "\nWhere "+this.selects[this.selects.length - 1].value['Where']+";";
+      }else{
+        this.resultado =  this.resultado +";";
+      }
     }
     if(this.secciones == 2){
       this.resultado = "Insert Into "+ this.insertForm.value['Tabla']+"("+this.insertForm.value['Columnas']+") Values ("+this.insertForm.value['Columnas']+");" 
     }
   
     if(this.secciones == 3){
-      this.resultado = "Update "+ this.updateForm.value['Tabla']+" Set "+this.updateForm.value['Columnas']+" = "+this.updateForm.value['Columnas']; 
+      this.resultado = "Update "+ this.updateForm.value['Tabla']+" Set "+this.updateForm.value['Columnas']+" = "+this.updateForm.value['Columnas']+";"; 
     }
 
     if(this.secciones == 4){
-      this.resultado = "Insert Into "+ this.insertForm.value['Tabla']+"("+this.insertForm.value['Columnas']+") Values ("+this.insertForm.value['Columnas']+");" 
+      this.resultado = "Delete From "+ this.deleteForm.value['Tabla']+" Where "+this.deleteForm.value['Columnas']+";" 
     }
 
   }

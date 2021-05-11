@@ -30,7 +30,7 @@
                 <button class="btn btn-secondary dropdown-toggle" type="button"
                   data-bs-toggle="dropdown">{{sentencia}}</button>
                 <ul class="dropdown-menu">
-                  <li *ngFor="let sen of sentencias;let i = index" (click)="this.secciones = i+1 ">
+                  <li *ngFor="let sen of sentencias;let i = index" (click)="this.secciones = i+1; this.sentencia = sen; this.resultado =''">
                     <a class="dropdown-item">
                       {{sen}}
                     </a>
@@ -74,7 +74,18 @@
                     </div>
                   </div>
                 </div>
-
+              </div>
+              <div class="col-md-12 col-sm-12 ">
+                <div class="row mt-3">
+                  <div class="col-md-12 col-sm-12">
+                    <button type="button" (click)="isWhere=!isWhere" class="btn btn-warning">Agregar Where</button>
+                  </div>
+                </div>
+                <div class="row mt-3" *ngIf="isWhere">
+                  <div class="col-md-12 col-sm-12">
+                    <input type="text" formControlName="Where" placeholder="Ejemplo: Where Clausula" class="form-control">
+                  </div>
+                </div>
               </div>
               <div class="row mt-5">
                 <div class="col-ms-12 text-center">
@@ -92,13 +103,12 @@
                   <h5>INTO Tabla*</h5>
                 </div>
                 <div class="col-md-3 col-sm-12">
-                  <input type="text" formControlName="Tabla" placeholder="Ejemplo: miTabla" class="form-control"
-                    >
+                  <input type="text" formControlName="Tabla" placeholder="Ejemplo: miTabla" class="form-control">
                 </div>
                 <div class="col-md-3 col-sm-12">
-                  <h5>Nombre Columnas</h5>
+                  <h5>Nombre Columnas*</h5>
                 </div>
-                
+
                 <div class="col-md-3 col-sm-12">
                   <input type="text" formControlName="Columnas" placeholder="Ejemplo: Columna1,Columna2,..."
                     class="form-control">
@@ -120,13 +130,12 @@
                   <h5>Tabla*</h5>
                 </div>
                 <div class="col-md-3 col-sm-12">
-                  <input type="text" formControlName="Tabla" placeholder="Ejemplo: miTabla" class="form-control"
-                    >
+                  <input type="text" formControlName="Tabla" placeholder="Ejemplo: miTabla" class="form-control">
                 </div>
                 <div class="col-md-3 col-sm-12">
                   <h5>Nombre Columnas</h5>
                 </div>
-                
+
                 <div class="col-md-3 col-sm-12">
                   <input type="text" formControlName="Columnas" placeholder="Ejemplo: Columna1,Columna2,..."
                     class="form-control">
@@ -148,15 +157,14 @@
                   <h5>FROM Tabla*</h5>
                 </div>
                 <div class="col-md-3 col-sm-12">
-                  <input type="text" formControlName="Tabla" placeholder="Ejemplo: miTabla" class="form-control"
-                    >
+                  <input type="text" formControlName="Tabla" placeholder="Ejemplo: miTabla" class="form-control">
                 </div>
                 <div class="col-md-3 col-sm-12">
                   <h5>WHERE*</h5>
                 </div>
-                
+
                 <div class="col-md-3 col-sm-12">
-                  <input type="text" formControlName="Columnas" placeholder="Ejemplo: Columna1,Columna2,..."
+                  <input type="text" formControlName="Columnas" placeholder="Clausula "
                     class="form-control">
                 </div>
               </div>
@@ -191,26 +199,3 @@
 </body>
 
 </html>
-
-
-
-<!-- <div class="row mt-3"  *ngFor="let select of selects; let i = index">
-  <div class="col-md-2">
-    <h5>Columnas {{select.indice}}: *</h5>
-  </div>
-  <div class="col-md-3">
-    <input type="text" [(ngModel)]="select.Columnas" placeholder="Ejemplo: Columna1,Columna2,...">
-  </div>
-  <div class="col-md-1">
-    <h5>From</h5>
-  </div>
-  <div class="col-md-2">
-    <h5>Tabla {{select.indice}}: *</h5>
-  </div>
-  <div class="col-md-3">
-    <input type="text" [(ngModel)]="select.Tabla" placeholder="Ejemplo: miTabla">
-  </div>
-  <div class="col-md-1">
-    <button type="button" class="btn btn-success" (click)="addElementSelect()">Success</button>
-  </div>
-</div> -->
